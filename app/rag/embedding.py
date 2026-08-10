@@ -16,6 +16,7 @@ specifically to fit Render's free-tier 512MB RAM limit:
    technique for memory-constrained deployments (e.g. AWS Lambda) and is
    what actually fixed repeated out-of-memory kills on the 512MB instance.
 """
+import gc
 import hashlib
 import sys
 import tarfile
@@ -67,6 +68,7 @@ MODEL_DOWNLOAD_URL = (
 MODEL_SHA256 = "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3"
 
 EMBEDDING_DIM = 384
+MAX_SEQ_LENGTH = 128
 
 _tokenizer = None
 _session = None
@@ -124,8 +126,13 @@ def _get_tokenizer():
 
         extracted = _ensure_model_downloaded()
         _tokenizer = Tokenizer.from_file(str(extracted / "tokenizer.json"))
-        _tokenizer.enable_truncation(max_length=256)
-        _tokenizer.enable_padding(pad_id=0, pad_token="[PAD]", length=256)
+        # 128 instead of 256: attention memory scales with sequence length
+        # squared, so this alone roughly quarters the forward-pass working
+        # set. Render logs showed the process getting OOM-killed mid
+        # session.run(), after model load succeeded at a modest 260MB -- so
+        # the forward pass itself, not model loading, was the actual spike.
+        _tokenizer.enable_truncation(max_length=MAX_SEQ_LENGTH)
+        _tokenizer.enable_padding(pad_id=0, pad_token="[PAD]", length=MAX_SEQ_LENGTH)
         _log_rss("after tokenizer loaded")
     return _tokenizer
 
@@ -160,11 +167,17 @@ def _get_session():
     return _session
 
 
-def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
+def embed(texts: list[str], batch_size: int = 2) -> np.ndarray:
     """Return an (N, 384) float32 array of L2-normalized embeddings.
 
     Small batch_size keeps peak memory low during the forward pass -- with a
     corpus this size the extra time from smaller batches is negligible.
+    Render logs showed the process getting OOM-killed inside the very first
+    session.run() call (model load itself only used ~260MB), so batch_size
+    was dropped from 8 to 2 and each batch's intermediate tensors are
+    explicitly deleted + garbage-collected before starting the next one,
+    instead of relying on Python to reclaim them whenever it gets around to
+    it.
     """
     if not texts:
         return np.zeros((0, EMBEDDING_DIM), dtype=np.float32)
@@ -174,6 +187,8 @@ def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
 
     all_embeddings = []
     for i in range(0, len(texts), batch_size):
+        if i == 0:
+            _log_rss("before first session.run()")
         batch = texts[i : i + batch_size]
         encoded = [tokenizer.encode(t) for t in batch]
         input_ids = np.array([e.ids for e in encoded], dtype=np.int64)
@@ -189,6 +204,8 @@ def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
             },
         )
         last_hidden_state = outputs[0]
+        if i == 0:
+            _log_rss("after first session.run()")
 
         mask_expanded = np.broadcast_to(
             np.expand_dims(attention_mask, -1), last_hidden_state.shape
@@ -201,6 +218,21 @@ def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
         norm[norm == 0] = 1e-12
         normalized = (pooled / norm).astype(np.float32)
         all_embeddings.append(normalized)
+
+        del (
+            outputs,
+            last_hidden_state,
+            mask_expanded,
+            summed,
+            counts,
+            pooled,
+            norm,
+            input_ids,
+            attention_mask,
+            token_type_ids,
+            encoded,
+        )
+        gc.collect()
 
     _log_rss(f"after embedding {len(texts)} text(s)")
     return np.concatenate(all_embeddings, axis=0)
