@@ -1,0 +1,122 @@
+[
+  {
+    "employee_id": "E1001",
+    "name": "Jordan Lee",
+    "role": "Senior Data Analyst",
+    "department": "Analytics",
+    "employment_type": "full_time",
+    "home_state": "CA",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1005",
+    "hire_date": "2022-03-14"
+  },
+  {
+    "employee_id": "E1002",
+    "name": "Priya Nair",
+    "role": "Customer Success Manager",
+    "department": "Customer Success",
+    "employment_type": "full_time",
+    "home_state": "NY",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1006",
+    "hire_date": "2023-07-01"
+  },
+  {
+    "employee_id": "E1003",
+    "name": "Marcus Alvarez",
+    "role": "Software Engineer",
+    "department": "Engineering",
+    "employment_type": "full_time",
+    "home_state": "TX",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1007",
+    "hire_date": "2021-11-08"
+  },
+  {
+    "employee_id": "E1004",
+    "name": "Sana Malik",
+    "role": "HR Coordinator (Intern)",
+    "department": "People",
+    "employment_type": "intern",
+    "home_state": "IL",
+    "home_country": "US",
+    "remote_eligible": false,
+    "manager_id": "E1008",
+    "hire_date": "2026-06-01"
+  },
+  {
+    "employee_id": "E1005",
+    "name": "Dana Whitfield",
+    "role": "Director of Analytics",
+    "department": "Analytics",
+    "employment_type": "full_time",
+    "home_state": "CA",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1009",
+    "hire_date": "2019-02-11"
+  },
+  {
+    "employee_id": "E1006",
+    "name": "Omar Hassan",
+    "role": "VP Customer Success",
+    "department": "Customer Success",
+    "employment_type": "full_time",
+    "home_state": "NY",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1009",
+    "hire_date": "2018-09-20"
+  },
+  {
+    "employee_id": "E1007",
+    "name": "Lena Fischer",
+    "role": "Engineering Manager",
+    "department": "Engineering",
+    "employment_type": "full_time",
+    "home_state": "TX",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1009",
+    "hire_date": "2020-05-04"
+  },
+  {
+    "employee_id": "E1008",
+    "name": "Grace Kim",
+    "role": "HR Business Partner",
+    "department": "People",
+    "employment_type": "full_time",
+    "home_state": "IL",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1009",
+    "hire_date": "2021-01-19"
+  },
+  {
+    "employee_id": "E1009",
+    "name": "Terrence Boyd",
+    "role": "Chief Operating Officer",
+    "department": "Executive",
+    "employment_type": "full_time",
+    "home_state": "CA",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": null,
+    "hire_date": "2016-04-01"
+  },
+  {
+    "employee_id": "E1010",
+    "name": "Rina Suzuki",
+    "role": "Support Specialist",
+    "department": "Customer Success",
+    "employment_type": "part_time",
+    "home_state": "WA",
+    "home_country": "US",
+    "remote_eligible": true,
+    "manager_id": "E1006",
+    "hire_date": "2024-10-02"
+  }
+]

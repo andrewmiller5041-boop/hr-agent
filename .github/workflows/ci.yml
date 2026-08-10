@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build/import check (app starts)
+        run: python -c "from app.main import app; print('app import OK:', app.title)"
+
+      - name: Run tests (health, MCP discovery/call, RAG retrieval)
+        run: pytest -v
+
+  deploy:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy hook
+        # Configure RENDER_DEPLOY_HOOK_URL as a GitHub Actions secret pointing
+        # at your Render service's deploy hook. This step only runs after
+        # build-and-test succeeds, satisfying "deployment must only occur if
+        # tests pass." If you rely on Render's built-in auto-deploy-on-push
+        # instead, you can remove this job.
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_URL not set -- skipping explicit deploy trigger (Render auto-deploy-on-push may already be enabled)."
+          fi

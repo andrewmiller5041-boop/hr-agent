@@ -1,0 +1,14 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+chromadb==0.5.23
+onnxruntime==1.20.1
+tokenizers==0.20.3
+groq==0.13.1
+mcp==1.12.4
+python-dotenv==1.0.1
+pydantic==2.10.4
+beautifulsoup4==4.12.3
+markdown==3.7
+httpx[socks]==0.28.1
+pytest==8.3.4
+pytest-asyncio==0.25.0

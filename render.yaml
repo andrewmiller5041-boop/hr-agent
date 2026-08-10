@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: hr-agent
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: EMBEDDING_MODEL_NAME
+        value: sentence-transformers/all-MiniLM-L6-v2
+      - key: CORPUS_DIR
+        value: corpus
+      - key: MOCK_DATA_DIR
+        value: mock_data
+      - key: CHROMA_DIR
+        value: app/rag/store
+      - key: RETRIEVAL_TOP_K
+        value: "4"
+      - key: PYTHON_VERSION
+        value: 3.11.9

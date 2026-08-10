@@ -1,0 +1,34 @@
+"""Central place for environment-driven configuration."""
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+
+# Embeddings use Chroma's built-in DefaultEmbeddingFunction (all-MiniLM-L6-v2
+# via onnxruntime) -- no torch/transformers dependency, which keeps install
+# size and RAM usage small for free-tier hosting. This name is kept for
+# documentation/logging purposes.
+EMBEDDING_MODEL_NAME = os.getenv(
+    "EMBEDDING_MODEL_NAME", "chromadb-default (onnx all-MiniLM-L6-v2)"
+)
+
+CORPUS_DIR = BASE_DIR / os.getenv("CORPUS_DIR", "corpus")
+MOCK_DATA_DIR = BASE_DIR / os.getenv("MOCK_DATA_DIR", "mock_data")
+CHROMA_DIR = BASE_DIR / os.getenv("CHROMA_DIR", "app/rag/store")
+
+RETRIEVAL_TOP_K = int(os.getenv("RETRIEVAL_TOP_K", "4"))
+CHUNK_SIZE_TOKENS = int(os.getenv("CHUNK_SIZE_TOKENS", "400"))
+CHUNK_OVERLAP_TOKENS = int(os.getenv("CHUNK_OVERLAP_TOKENS", "60"))
+
+MCP_SERVER_CMD = os.getenv("MCP_SERVER_CMD", "python")
+MCP_SERVER_SCRIPT = str(BASE_DIR / os.getenv("MCP_SERVER_SCRIPT", "mcp_server/server.py"))
+
+# Deterministic seed used for any sampling (e.g. evaluation subsampling).
+RANDOM_SEED = int(os.getenv("RANDOM_SEED", "42"))

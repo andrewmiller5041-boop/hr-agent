@@ -1,0 +1,10 @@
+[
+  {
+    "ticket_id": "TCK-20260810115610-001",
+    "employee_id": "E1002",
+    "summary": "PTO request for 3 days next week",
+    "category": "PTO Request",
+    "status": "open",
+    "created_at": "2026-08-10T11:56:10.256617+00:00"
+  }
+]

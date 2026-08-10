@@ -1,0 +1,12 @@
+{
+  "E1001": {"eligible": true, "medical_plan": "Premium", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 5, "life_insurance": "basic"},
+  "E1002": {"eligible": true, "medical_plan": "Standard", "dental_enrolled": true, "vision_enrolled": false, "401k_contribution_pct": 3, "life_insurance": "basic"},
+  "E1003": {"eligible": true, "medical_plan": "Standard", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 6, "life_insurance": "supplemental"},
+  "E1004": {"eligible": false, "medical_plan": null, "dental_enrolled": false, "vision_enrolled": false, "401k_contribution_pct": 0, "life_insurance": null, "note": "Interns are not eligible for company-subsidized benefits."},
+  "E1005": {"eligible": true, "medical_plan": "Premium", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 8, "life_insurance": "supplemental"},
+  "E1006": {"eligible": true, "medical_plan": "Premium", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 6, "life_insurance": "basic"},
+  "E1007": {"eligible": true, "medical_plan": "Standard", "dental_enrolled": false, "vision_enrolled": true, "401k_contribution_pct": 4, "life_insurance": "basic"},
+  "E1008": {"eligible": true, "medical_plan": "Standard", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 4, "life_insurance": "basic"},
+  "E1009": {"eligible": true, "medical_plan": "Premium", "dental_enrolled": true, "vision_enrolled": true, "401k_contribution_pct": 10, "life_insurance": "supplemental"},
+  "E1010": {"eligible": true, "medical_plan": null, "dental_enrolled": false, "vision_enrolled": false, "401k_contribution_pct": 2, "life_insurance": null, "note": "Part-time: eligible for 401(k) only, no company-subsidized medical."}
+}
