@@ -5,6 +5,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Must be set before numpy/onnxruntime are imported anywhere (this module is
 # imported first by app/main.py). Numpy's BLAS backend and onnxruntime both
 # default to spawning a thread pool sized to the HOST machine's CPU count,
