@@ -5,6 +5,21 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+# Must be set before numpy/onnxruntime are imported anywhere (this module is
+# imported first by app/main.py). Numpy's BLAS backend and onnxruntime both
+# default to spawning a thread pool sized to the HOST machine's CPU count,
+# not the container's actual allotment -- on shared hosting like Render's
+# free tier this can allocate far more thread-local buffer memory than a
+# tiny model like ours needs. Pinning everything to 1 thread is a standard
+# fix for memory-constrained containers.
+for _thread_env_var in (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "NUMEXPR_NUM_THREADS",
+    "VECLIB_MAXIMUM_THREADS",
+):
+    os.environ.setdefault(_thread_env_var, "1")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

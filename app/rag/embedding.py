@@ -17,12 +17,22 @@ specifically to fit Render's free-tier 512MB RAM limit:
    what actually fixed repeated out-of-memory kills on the 512MB instance.
 """
 import hashlib
+import resource
+import sys
 import tarfile
 import time
 from pathlib import Path
 
 import httpx
 import numpy as np
+
+
+def _log_rss(label: str) -> None:
+    """Diagnostic checkpoint: print current process peak RSS (MB) so that if
+    this still OOMs on a memory-constrained host, the platform logs show
+    exactly which stage the memory spike happened at, instead of guessing."""
+    rss_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    print(f"[embedding] {label}: peak RSS so far = {rss_mb:.1f} MB", flush=True, file=sys.stderr)
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 DOWNLOAD_PATH = Path.home() / ".cache" / "hr_agent" / "onnx_models" / MODEL_NAME
@@ -54,6 +64,7 @@ def _ensure_model_downloaded() -> Path:
     if all((extracted / f).exists() for f in required):
         return extracted
 
+    _log_rss("before model download")
     DOWNLOAD_PATH.mkdir(parents=True, exist_ok=True)
     archive_path = DOWNLOAD_PATH / ARCHIVE_FILENAME
 
@@ -77,8 +88,10 @@ def _ensure_model_downloaded() -> Path:
         else:
             raise RuntimeError(f"Could not download embedding model: {last_exc}")
 
+    _log_rss("after model download")
     with tarfile.open(archive_path, mode="r:gz") as tar:
         tar.extractall(path=DOWNLOAD_PATH)
+    _log_rss("after model extraction")
     return extracted
 
 
@@ -91,6 +104,7 @@ def _get_tokenizer():
         _tokenizer = Tokenizer.from_file(str(extracted / "tokenizer.json"))
         _tokenizer.enable_truncation(max_length=256)
         _tokenizer.enable_padding(pad_id=0, pad_token="[PAD]", length=256)
+        _log_rss("after tokenizer loaded")
     return _tokenizer
 
 
@@ -108,58 +122,23 @@ def _get_session():
         so.enable_mem_pattern = False
         so.intra_op_num_threads = 1
         so.inter_op_num_threads = 1
+        # Skip graph-optimization passes (constant folding, operator fusion,
+        # etc.) -- these run once at load time and can transiently use more
+        # memory than the base model needs; irrelevant for our latency needs
+        # at this tiny scale.
+        so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
+        so.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        _log_rss("before InferenceSession creation")
         _session = ort.InferenceSession(
             str(extracted / "model.onnx"),
             providers=["CPUExecutionProvider"],
             sess_options=so,
         )
+        _log_rss("after InferenceSession creation")
     return _session
 
 
 def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
     """Return an (N, 384) float32 array of L2-normalized embeddings.
 
-    Small batch_size keeps peak memory low during the forward pass -- with a
-    corpus this size the extra time from smaller batches is negligible.
-    """
-    if not texts:
-        return np.zeros((0, EMBEDDING_DIM), dtype=np.float32)
-
-    tokenizer = _get_tokenizer()
-    session = _get_session()
-
-    all_embeddings = []
-    for i in range(0, len(texts), batch_size):
-        batch = texts[i : i + batch_size]
-        encoded = [tokenizer.encode(t) for t in batch]
-        input_ids = np.array([e.ids for e in encoded], dtype=np.int64)
-        attention_mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
-        token_type_ids = np.zeros_like(input_ids, dtype=np.int64)
-
-        outputs = session.run(
-            None,
-            {
-                "input_ids": input_ids,
-                "attention_mask": attention_mask,
-                "token_type_ids": token_type_ids,
-            },
-        )
-        last_hidden_state = outputs[0]
-
-        mask_expanded = np.broadcast_to(
-            np.expand_dims(attention_mask, -1), last_hidden_state.shape
-        )
-        summed = np.sum(last_hidden_state * mask_expanded, axis=1)
-        counts = np.clip(mask_expanded.sum(axis=1), a_min=1e-9, a_max=None)
-        pooled = summed / counts
-
-        norm = np.linalg.norm(pooled, axis=1, keepdims=True)
-        norm[norm == 0] = 1e-12
-        normalized = (pooled / norm).astype(np.float32)
-        all_embeddings.append(normalized)
-
-    return np.concatenate(all_embeddings, axis=0)
-
-
-def embed_one(text: str) -> np.ndarray:
-    return embed([text])[0]
+    Small batch_size keeps
