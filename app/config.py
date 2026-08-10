@@ -27,6 +27,11 @@ RETRIEVAL_TOP_K = int(os.getenv("RETRIEVAL_TOP_K", "4"))
 CHUNK_SIZE_TOKENS = int(os.getenv("CHUNK_SIZE_TOKENS", "400"))
 CHUNK_OVERLAP_TOKENS = int(os.getenv("CHUNK_OVERLAP_TOKENS", "60"))
 
+# "memory" (default): MCP server runs in-process (one Python process total --
+# important for fitting in Render's free-tier 512MB RAM limit, since a
+# second subprocess would re-import the whole chromadb/onnxruntime stack).
+# "stdio": spawns mcp_server/server.py as a genuine separate OS process.
+MCP_TRANSPORT = os.getenv("MCP_TRANSPORT", "memory")
 MCP_SERVER_CMD = os.getenv("MCP_SERVER_CMD", "python")
 MCP_SERVER_SCRIPT = str(BASE_DIR / os.getenv("MCP_SERVER_SCRIPT", "mcp_server/server.py"))
 

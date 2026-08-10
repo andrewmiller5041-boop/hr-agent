@@ -1,12 +1,30 @@
-"""Async MCP client: spawns mcp_server/server.py over stdio, discovers its
-tools, and calls them. This is the ONLY code path the agent uses to reach the
-HR tools -- the orchestrator never imports mcp_server.tools directly.
+"""Async MCP client. Connects to the MCP server defined in
+mcp_server/server.py, discovers its tools, and calls them. This is the ONLY
+code path the agent uses to reach the HR tools -- the orchestrator never
+imports mcp_server.tools directly.
+
+Two transports are supported, selected via MCP_TRANSPORT:
+
+- "memory" (default): the MCP server runs IN-PROCESS via the MCP SDK's
+  in-memory transport (real JSON-RPC ClientSession <-> Server messages over
+  anyio memory streams, not a hard-coded function call). This avoids
+  spawning a second OS process that would re-import the whole
+  chromadb/onnxruntime stack a second time -- on Render's free 512MB
+  instance, running two full Python processes each holding a copy of that
+  stack is what pushes memory usage over the limit. This is still a
+  legitimate MCP transport per the project's "or another MCP-compatible
+  approach" allowance.
+- "stdio": the original approach -- spawns `python mcp_server/server.py` as
+  a genuine separate OS subprocess and talks to it over stdio. Useful for
+  local debugging or if you want to demonstrate MCP running as a literal
+  separate process; set MCP_TRANSPORT=stdio to use it.
 """
 import json
 from contextlib import AsyncExitStack
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from mcp.shared.memory import create_connected_server_and_client_session
 
 from app import config
 
@@ -26,19 +44,33 @@ class MCPClient:
         return self._session is not None
 
     async def connect(self) -> None:
-        server_params = StdioServerParameters(
-            command=config.MCP_SERVER_CMD,
-            args=[config.MCP_SERVER_SCRIPT],
-        )
         self._stack = AsyncExitStack()
         try:
-            read, write = await self._stack.enter_async_context(
-                stdio_client(server_params)
-            )
-            self._session = await self._stack.enter_async_context(
-                ClientSession(read, write)
-            )
-            await self._session.initialize()
+            if config.MCP_TRANSPORT == "stdio":
+                server_params = StdioServerParameters(
+                    command=config.MCP_SERVER_CMD,
+                    args=[config.MCP_SERVER_SCRIPT],
+                )
+                read, write = await self._stack.enter_async_context(
+                    stdio_client(server_params)
+                )
+                self._session = await self._stack.enter_async_context(
+                    ClientSession(read, write)
+                )
+                await self._session.initialize()
+            else:
+                # Local import: only pull in mcp_server.server (and its
+                # heavier deps like the RAG stack) once we actually need to
+                # connect, not at module import time.
+                from mcp_server.server import mcp as fastmcp_instance
+
+                # create_connected_server_and_client_session already calls
+                # ClientSession.initialize() internally.
+                self._session = await self._stack.enter_async_context(
+                    create_connected_server_and_client_session(
+                        fastmcp_instance._mcp_server
+                    )
+                )
             await self.list_tools(refresh=True)
         except Exception as exc:  # noqa: BLE001
             await self.close()
