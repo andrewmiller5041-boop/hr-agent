@@ -17,7 +17,6 @@ specifically to fit Render's free-tier 512MB RAM limit:
    what actually fixed repeated out-of-memory kills on the 512MB instance.
 """
 import hashlib
-import resource
 import sys
 import tarfile
 import time
@@ -26,13 +25,36 @@ from pathlib import Path
 import httpx
 import numpy as np
 
+try:
+    # Unix-only (works on Render/Linux); not available on Windows, where
+    # this is used for local dev. Diagnostics are best-effort only.
+    import resource
+
+    def _current_rss_mb() -> float | None:
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+
+except ImportError:  # Windows
+    try:
+        import psutil
+
+        def _current_rss_mb() -> float | None:
+            return psutil.Process().memory_info().rss / (1024 * 1024)
+
+    except ImportError:
+
+        def _current_rss_mb() -> float | None:
+            return None
+
 
 def _log_rss(label: str) -> None:
-    """Diagnostic checkpoint: print current process peak RSS (MB) so that if
-    this still OOMs on a memory-constrained host, the platform logs show
-    exactly which stage the memory spike happened at, instead of guessing."""
-    rss_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
-    print(f"[embedding] {label}: peak RSS so far = {rss_mb:.1f} MB", flush=True, file=sys.stderr)
+    """Diagnostic checkpoint: print current process RSS (MB) so that if this
+    still OOMs on a memory-constrained host, the platform logs show exactly
+    which stage the memory spike happened at, instead of guessing."""
+    rss_mb = _current_rss_mb()
+    if rss_mb is None:
+        print(f"[embedding] {label}: (memory reporting unavailable on this platform)", flush=True, file=sys.stderr)
+    else:
+        print(f"[embedding] {label}: RSS so far = {rss_mb:.1f} MB", flush=True, file=sys.stderr)
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 DOWNLOAD_PATH = Path.home() / ".cache" / "hr_agent" / "onnx_models" / MODEL_NAME
@@ -141,4 +163,48 @@ def _get_session():
 def embed(texts: list[str], batch_size: int = 8) -> np.ndarray:
     """Return an (N, 384) float32 array of L2-normalized embeddings.
 
-    Small batch_size keeps
+    Small batch_size keeps peak memory low during the forward pass -- with a
+    corpus this size the extra time from smaller batches is negligible.
+    """
+    if not texts:
+        return np.zeros((0, EMBEDDING_DIM), dtype=np.float32)
+
+    tokenizer = _get_tokenizer()
+    session = _get_session()
+
+    all_embeddings = []
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i : i + batch_size]
+        encoded = [tokenizer.encode(t) for t in batch]
+        input_ids = np.array([e.ids for e in encoded], dtype=np.int64)
+        attention_mask = np.array([e.attention_mask for e in encoded], dtype=np.int64)
+        token_type_ids = np.zeros_like(input_ids, dtype=np.int64)
+
+        outputs = session.run(
+            None,
+            {
+                "input_ids": input_ids,
+                "attention_mask": attention_mask,
+                "token_type_ids": token_type_ids,
+            },
+        )
+        last_hidden_state = outputs[0]
+
+        mask_expanded = np.broadcast_to(
+            np.expand_dims(attention_mask, -1), last_hidden_state.shape
+        )
+        summed = np.sum(last_hidden_state * mask_expanded, axis=1)
+        counts = np.clip(mask_expanded.sum(axis=1), a_min=1e-9, a_max=None)
+        pooled = summed / counts
+
+        norm = np.linalg.norm(pooled, axis=1, keepdims=True)
+        norm[norm == 0] = 1e-12
+        normalized = (pooled / norm).astype(np.float32)
+        all_embeddings.append(normalized)
+
+    _log_rss(f"after embedding {len(texts)} text(s)")
+    return np.concatenate(all_embeddings, axis=0)
+
+
+def embed_one(text: str) -> np.ndarray:
+    return embed([text])[0]
