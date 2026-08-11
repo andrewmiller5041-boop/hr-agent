@@ -1,10 +1,10 @@
 # Deployment Info
 
-**Deployed URL:** _fill in after deploying, e.g._ `https://hr-agent.onrender.com`
+**Deployed URL:** `https://hr-agent-1i6m.onrender.com`
 
-**Health check:** `https://<your-app>.onrender.com/health`
+**Health check:** `https://hr-agent-1i6m.onrender.com/health`
 
-**Chat UI:** `https://<your-app>.onrender.com/`
+**Chat UI:** `https://hr-agent-1i6m.onrender.com/`
 
 ## Cold-start behavior
 
@@ -21,11 +21,19 @@ spin-down will:
    `initialize()` + `list_tools()` (no separate process is spawned by
    default — see `design-and-evaluation.md` §3 for why).
 
-_Fill in after your first deployed cold-start test:_
-- Cold-start latency for `/health`: **__ seconds**
-- Cold-start latency for a full `/chat` request: **__ seconds**
-- Warm-request `/chat` latency: **__ seconds** (see `evaluation/results.md`
-  for the full p50/p95 breakdown)
+**Observed:**
+- First `/chat` request in a session: **~6-7 seconds**
+- Second `/chat` request immediately after: **~5 seconds** (about 1-2
+  seconds faster)
+- Note: this comparison was taken while the service had already been
+  actively used within the prior ~15 minutes, so it reflects normal
+  first-request-vs-subsequent-request latency rather than a true
+  from-spin-down cold start (which would show a much larger gap — tens of
+  seconds for container boot alone, on top of the steps below). Both
+  numbers are still well within a usable range for the demo. See
+  `evaluation/results.md` for the full p50/p95 latency breakdown across all
+  25 evaluation items, including the first-call cold-start proxy reported
+  there.
 
 ## Environment variables required
 
@@ -39,16 +47,23 @@ _Fill in after your first deployed cold-start test:_
 
 ## Notes / known issues
 
-Two deployment issues came up on the first couple of deploy attempts and
-were resolved (see `ai-tooling.md` and `design-and-evaluation.md` §6 for the
-full debugging narrative):
+Three deployment issues came up across the first several deploy attempts
+and were all resolved (see `ai-tooling.md` and `design-and-evaluation.md`
+§6 for the full debugging narrative):
 - **Build failure:** Render defaulted to a Python version without an
   `onnxruntime==1.20.1` wheel — fixed by setting `PYTHON_VERSION=3.11.9`.
-- **Out-of-memory kill (exit 137):** the free-tier 512MB limit was exceeded
-  during first-request index building — fixed by (a) running the MCP server
-  in-process instead of as a second OS process, and (b) disabling
-  onnxruntime's memory-arena allocator and dropping `chromadb` in favor of a
-  small custom vector store.
+- **Out-of-memory kill (exit 137), attempt 1:** the free-tier 512MB limit
+  was exceeded during first-request index building — fixed by (a) running
+  the MCP server in-process instead of as a second OS process, and (b)
+  disabling onnxruntime's memory-arena allocator and dropping `chromadb` in
+  favor of a small custom vector store.
+- **Out-of-memory kill (exit 137), attempt 2:** still failed after the
+  above, this time during the very first embedding forward pass rather than
+  model loading. Diagnosed with explicit RSS logging added at each stage of
+  the embedding path (visible in Render's logs), which pinpointed the
+  transformer forward pass itself as the spike. Fixed by cutting the
+  tokenizer's max sequence length from 256 to 128 tokens and the embedding
+  batch size from 8 to 2, with explicit tensor cleanup between batches.
 
 _Fill in any platform outage or further deployment issue notes here, per the
 assignment's exception clause, if applicable._

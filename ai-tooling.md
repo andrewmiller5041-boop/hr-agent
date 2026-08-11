@@ -101,10 +101,24 @@ itself had to happen against the real platform.
   results itself since no key was available in its sandbox. I ran
   `evaluation/run_eval.py` myself after adding my key and reviewed the
   output in `evaluation/results.md` before treating any number as final.
-- [Fill in: note any prompt tuning, corpus expansion, or bug fixes you made
-  after your own testing and after recording the demo.]
-- [Fill in: note anything you changed about the deployment configuration
-  once you actually deployed to Render.]
+- After the three deployment issues above were fixed, the free-tier instance
+  still OOM-killed on the very first embedding call (model load succeeded,
+  but the transformer forward pass over the first batch of policy chunks
+  pushed memory over the limit). Diagnosed with Claude by adding explicit
+  RSS checkpoint logging (`app/rag/embedding.py`, `_log_rss`) around each
+  stage of the embedding path so the exact failure point was visible in
+  Render's logs instead of guessed at. That pinpointed the forward pass
+  itself as the spike, which was fixed by cutting the tokenizer's max
+  sequence length from 256 to 128 tokens (attention memory scales with
+  sequence length squared) and reducing the embedding batch size from 8 to
+  2, with each batch's intermediate tensors explicitly deleted and
+  garbage-collected before the next batch starts.
+- Separately, the diagnostic/tuning code Claude wrote used Python's
+  Unix-only `resource` module for memory logging, which crashed immediately
+  on my Windows dev machine (`ModuleNotFoundError: No module named
+  'resource'`) even though it worked fine on Render's Linux containers.
+  Fixed with a `resource`/`psutil`/no-op fallback chain so the same file
+  works cross-platform.
 
 ## Responsibility
 

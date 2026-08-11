@@ -24,7 +24,9 @@ FastAPI web app  ---/chat, /health---> Agent Orchestrator (manual, no framework)
       |                                 Groq LLM (tool-calling)
       |                                        |
       |                                        v
-      |                              MCP Client (stdio) <-----> MCP Server (subprocess)
+      |                          MCP Client <---in-process (default)---> MCP Server
+      |                            (real MCP protocol messages; MCP_TRANSPORT=stdio
+      |                             also available to run the server as a subprocess)
       |                                                              |
       |                                                    +---------+---------+
       |                                                    |                   |
