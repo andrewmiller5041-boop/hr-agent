@@ -73,9 +73,32 @@ async def run_llm_items(items: list[dict]) -> list[dict]:
     try:
         for item in items:
             start = time.perf_counter()
-            chat_result = await handle_message(
-                client, item["question"], employee_id=item.get("employee_id")
-            )
+            try:
+                chat_result = await handle_message(
+                    client, item["question"], employee_id=item.get("employee_id")
+                )
+            except Exception as exc:  # noqa: BLE001
+                # Groq's free-tier daily token cap (or any other transient
+                # failure) shouldn't blow away every item already completed
+                # in this run -- record the failure and keep going, so a
+                # partial run still writes usable results.json/results.md.
+                latency_ms = (time.perf_counter() - start) * 1000
+                print(f"[{item['id']}] {item['type']} -> ERROR: {exc}")
+                results.append(
+                    {
+                        "id": item["id"],
+                        "type": item["type"],
+                        "question": item["question"],
+                        "employee_id": item.get("employee_id"),
+                        "error": str(exc),
+                        "latency_ms": round(latency_ms, 1),
+                    }
+                )
+                RESULTS_JSON_PATH.write_text(
+                    json.dumps({"partial_results": results}, indent=2),
+                    encoding="utf-8",
+                )
+                continue
             latency_ms = (time.perf_counter() - start) * 1000
 
             tool_names = [t["tool"] for t in chat_result.trace]
@@ -127,6 +150,14 @@ async def run_llm_items(items: list[dict]) -> list[dict]:
 
             results.append(record)
             print(f"[{item['id']}] {item['type']} -> {latency_ms:.0f}ms")
+            # Incremental checkpoint after every item (success or failure) --
+            # if this run gets interrupted (e.g. hitting Groq's daily token
+            # cap partway through), whatever completed so far is already on
+            # disk instead of being lost.
+            RESULTS_JSON_PATH.write_text(
+                json.dumps({"partial_results": results}, indent=2),
+                encoding="utf-8",
+            )
     finally:
         await client.close()
     return results
