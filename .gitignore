@@ -4,4 +4,3 @@ __pycache__/
 .env
 app/rag/store/
 .pytest_cache/
-evaluation/results.json
