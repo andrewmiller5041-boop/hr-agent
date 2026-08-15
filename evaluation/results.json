@@ -1,0 +1,1380 @@
+{
+  "summary": {
+    "n_items": 25,
+    "citation_accuracy": 0.8888888888888888,
+    "avg_keyword_hit_rate": 0.7962962962962963,
+    "tool_selection_accuracy": 0.8888888888888888,
+    "clarification_accuracy": 0.75,
+    "refusal_accuracy": 1.0,
+    "action_safety_pass_rate": 1.0,
+    "latency_p50_ms": 1679.1,
+    "latency_p95_ms": 3682.2,
+    "first_call_ms_cold_proxy": 3472.0,
+    "warm_latency_p50_ms": 1679.1
+  },
+  "ablation": {
+    "k=3": {
+      "hits": 18,
+      "total": 18,
+      "hit_rate": 1.0
+    },
+    "k=6": {
+      "hits": 18,
+      "total": 18,
+      "hit_rate": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "PQ-01",
+      "type": "policy_qa",
+      "question": "How many standard paid holidays does Northwind Analytics observe each year, not counting floating holidays?",
+      "employee_id": null,
+      "answer": "The number of standard paid holidays observed by Northwind Analytics is not clearly stated in the provided policy documents. Per the Company Holiday Schedule section of the holiday-schedule document, the company observes certain paid holidays, but the exact number is not specified. Recommendation: Refer to the company's holiday schedule for the most up-to-date information on observed holidays.",
+      "citations": [
+        {
+          "doc_id": "holiday-schedule",
+          "title": "Company Holiday Schedule",
+          "section": "Floating Holidays",
+          "snippet": "In addition to the standard holidays above, every employee receives **2 floating holidays** per calendar year to use for religious, cultural, or personal observances not on the standard schedule. Floating holidays: - Must be requested through the same system as PTO requests, at l"
+        },
+        {
+          "doc_id": "holiday-schedule",
+          "title": "Company Holiday Schedule",
+          "section": "Company Holiday Schedule",
+          "snippet": "Northwind Analytics observes the following paid holidays each year for all U.S.-based full-time and part-time employees. Employees based outside the United States follow the holiday schedule for their local Northwind Analytics entity, published separately by regional HR."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "standard paid holidays",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"standard paid holidays\", \"results\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Floating Holidays\", \"snippet\": \"In addition to the standard holidays above, every employee receives **2 floating holidays** per calendar year to use for religious, cultural, or personal observances not on the standard schedule. Floating holidays: - Must be requested throu",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "number of standard paid holidays observed by Northwind Analytics",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"number of standard paid holidays observed by Northwind Analytics\", \"results\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Company Holiday Schedule\", \"snippet\": \"Northwind Analytics observes the following paid holidays each year for all U.S.-based full-time and part-time employees. Employees based outside the United States follow the holiday schedule ",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "holiday-schedule",
+            "section": "Company Holiday Schedule"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"holiday-schedule\", \"sections\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Company Holiday Schedule\", \"text\": \"Northwind Analytics observes the following paid holidays each year for all U.S.-based full-time and part-time employees. Employees based outside the United States follow the holiday schedule for their local Northwind Analytic",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "list of standard paid holidays Northwind Analytics",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"list of standard paid holidays Northwind Analytics\", \"results\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Company Holiday Schedule\", \"snippet\": \"Northwind Analytics observes the following paid holidays each year for all U.S.-based full-time and part-time employees. Employees based outside the United States follow the holiday schedule for their loca",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 3472.0,
+      "tool_names_called": [
+        "search_policy_documents",
+        "search_policy_documents",
+        "get_policy_section",
+        "search_policy_documents"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 0.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-02",
+      "type": "policy_qa",
+      "question": "How many floating holidays do I get per year?",
+      "employee_id": null,
+      "answer": "According to the Company Holiday Schedule, Floating Holidays section, you get 2 floating holidays per year. These holidays must be requested through the same system as PTO requests, at least 2 business days in advance, and expire at the end of the calendar year.",
+      "citations": [
+        {
+          "doc_id": "holiday-schedule",
+          "title": "Company Holiday Schedule",
+          "section": "Floating Holidays",
+          "snippet": "In addition to the standard holidays above, every employee receives **2 floating holidays** per calendar year to use for religious, cultural, or personal observances not on the standard schedule. Floating holidays: - Must be requested through the same system as PTO requests, at l"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "floating holidays per year",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"floating holidays per year\", \"results\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Floating Holidays\", \"snippet\": \"In addition to the standard holidays above, every employee receives **2 floating holidays** per calendar year to use for religious, cultural, or personal observances not on the standard schedule. Floating holidays: - Must be requested t",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "holiday-schedule",
+            "section": "Floating Holidays"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"holiday-schedule\", \"sections\": [{\"doc_id\": \"holiday-schedule\", \"title\": \"Company Holiday Schedule\", \"section\": \"Floating Holidays\", \"text\": \"In addition to the standard holidays above, every employee receives **2 floating holidays** per calendar year to use for religious, cultural, or personal observances not on the standard schedule. Floating holidays: - Must be request",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1652.6,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-03",
+      "type": "policy_qa",
+      "question": "What is the maximum number of unused PTO days I can carry over into next year?",
+      "employee_id": null,
+      "answer": "According to the Paid Time Off (PTO) Policy, Unused PTO and Carryover section, the maximum number of unused PTO days you can carry over into next year is 5.",
+      "citations": [
+        {
+          "doc_id": "pto-policy",
+          "title": "Paid Time Off (PTO) Policy",
+          "section": "Unused PTO and Carryover",
+          "snippet": "Employees may carry over up to **5 unused PTO days** into the next calendar year. Any accrued PTO beyond that cap is forfeited on December 31st unless local law requires payout or carryover of a greater amount, in which case local law controls. Upon termination of employment, unu"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "PTO carryover limit",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"PTO carryover limit\", \"results\": [{\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"section\": \"Unused PTO and Carryover\", \"snippet\": \"Employees may carry over up to **5 unused PTO days** into the next calendar year. Any accrued PTO beyond that cap is forfeited on December 31st unless local law requires payout or carryover of a greater amount, in which case local law contr",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1394.5,
+      "tool_names_called": [
+        "search_policy_documents"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-04",
+      "type": "policy_qa",
+      "question": "How much is the home office stipend and how often can I use it?",
+      "employee_id": null,
+      "answer": "The home office stipend is up to $500 and can be used once every 2 years, per the Business Expense & Reimbursement Policy, Home Office Equipment section. It covers items such as an ergonomic chair, monitor, keyboard, mouse, desk, or basic office supplies, but does not include laptops or primary work computers.",
+      "citations": [
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Home Office Equipment",
+          "snippet": "Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mouse - A desk or sit-stand desk converter - Basic office supplie"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "home office stipend",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"home office stipend\", \"results\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Home Office Equipment\", \"snippet\": \"Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mouse - A d",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "expense-policy",
+            "section": "Home Office Equipment"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"expense-policy\", \"sections\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Home Office Equipment\", \"text\": \"Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mo",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 2057.4,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-05",
+      "type": "policy_qa",
+      "question": "How many weeks of paid parental leave do full-time employees get?",
+      "employee_id": null,
+      "answer": "Per the Leave of Absence Policy, Paid Parental Leave section, full-time employees are eligible for 12 weeks of paid parental leave at 100% of base salary, following the birth, adoption, or foster placement of a child, provided they have completed at least 90 days of employment.",
+      "citations": [
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Paid Parental Leave",
+          "snippet": "Full-time employees who have completed at least 90 days of employment are eligible for **12 weeks of paid parental leave** at 100% of base salary, following the birth, adoption, or foster placement of a child. Leave must be taken within 12 months of the qualifying event and can b"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "paid parental leave for full-time employees",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"paid parental leave for full-time employees\", \"results\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Paid Parental Leave\", \"snippet\": \"Full-time employees who have completed at least 90 days of employment are eligible for **12 weeks of paid parental leave** at 100% of base salary, following the birth, adoption, or foster placement of a child. L",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "leave-of-absence-policy",
+            "section": "Paid Parental Leave"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"leave-of-absence-policy\", \"sections\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Paid Parental Leave\", \"text\": \"Full-time employees who have completed at least 90 days of employment are eligible for **12 weeks of paid parental leave** at 100% of base salary, following the birth, adoption, or foster placement of a child. Leave m",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1485.3,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-06",
+      "type": "policy_qa",
+      "question": "What percentage does the company match on 401(k) contributions?",
+      "employee_id": null,
+      "answer": "The company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting, per the Benefits Overview document, 401(k) Retirement Plan section.",
+      "citations": [
+        {
+          "doc_id": "benefits-overview",
+          "title": "Benefits Overview",
+          "section": "401(k) Retirement Plan",
+          "snippet": "The Company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting. Part-time employees may contribute but do not receive a match."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "401(k) company match percentage",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"401(k) company match percentage\", \"results\": [{\"doc_id\": \"benefits-overview\", \"title\": \"Benefits Overview\", \"section\": \"401(k) Retirement Plan\", \"snippet\": \"The Company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting. Part-time employees may contribute but do not receive a match.\", \"score\": 0.723555862903595}]}",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "benefits-overview",
+            "section": "401(k) Retirement Plan"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"benefits-overview\", \"sections\": [{\"doc_id\": \"benefits-overview\", \"title\": \"Benefits Overview\", \"section\": \"401(k) Retirement Plan\", \"text\": \"The Company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting. Part-time employees may contribute but do not receive a match.\"}]}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1528.5,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-07",
+      "type": "policy_qa",
+      "question": "What is the daily meal expense limit while traveling for business?",
+      "employee_id": null,
+      "answer": "The daily meal expense limit while traveling for business is not explicitly stated in the provided policy documents. Recommendation: Contact the HR or finance department for more information on meal expense limits.",
+      "citations": [
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Travel Expenses",
+          "snippet": "Reasonable travel expenses for approved business travel are reimbursable, including: - Coach/economy airfare - Standard hotel accommodations (up to $250/night in major metro areas, $180/ night elsewhere, unless a conference rate is higher) - Ground transportation (rideshare, taxi"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "daily meal expense limit while traveling for business",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"daily meal expense limit while traveling for business\", \"results\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Travel Expenses\", \"snippet\": \"Reasonable travel expenses for approved business travel are reimbursable, including: - Coach/economy airfare - Standard hotel accommodations (up to $250/night in major metro areas, $180/ night elsew",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "meal expense limit business travel",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"meal expense limit business travel\", \"results\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Travel Expenses\", \"snippet\": \"Reasonable travel expenses for approved business travel are reimbursable, including: - Coach/economy airfare - Standard hotel accommodations (up to $250/night in major metro areas, $180/ night elsewhere, unless a conf",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "expense-policy",
+            "section": "Travel Expenses, Meals and Incidentals"
+          },
+          "result_summary": "{\"found\": false, \"error\": \"No section found for doc_id='expense-policy' section='Travel Expenses, Meals and Incidentals'\"}",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "expense-policy",
+            "section": "Meals"
+          },
+          "result_summary": "{\"found\": false, \"error\": \"No section found for doc_id='expense-policy' section='Meals'\"}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 3682.2,
+      "tool_names_called": [
+        "search_policy_documents",
+        "search_policy_documents",
+        "get_policy_section",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 0.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "PQ-08",
+      "type": "policy_qa",
+      "question": "How many bereavement days do I get for the death of a spouse?",
+      "employee_id": null,
+      "answer": "Per the Leave of Absence Policy, Bereavement Leave section, you are eligible for 5 paid bereavement days for the death of a spouse.",
+      "citations": [
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Bereavement Leave",
+          "snippet": "Employees receive **5 paid bereavement days** for the death of an immediate family member (spouse, child, parent, sibling) and **2 paid days** for an extended family member. Additional unpaid leave may be requested through HR."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "bereavement days for spouse death",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"bereavement days for spouse death\", \"results\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Bereavement Leave\", \"snippet\": \"Employees receive **5 paid bereavement days** for the death of an immediate family member (spouse, child, parent, sibling) and **2 paid days** for an extended family member. Additional unpaid leave may be requested through ",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "leave-of-absence-policy",
+            "section": "Bereavement Leave"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"leave-of-absence-policy\", \"sections\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Bereavement Leave\", \"text\": \"Employees receive **5 paid bereavement days** for the death of an immediate family member (spouse, child, parent, sibling) and **2 paid days** for an extended family member. Additional unpaid leave may be requested thro",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1531.3,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "MD-01",
+      "type": "multi_doc",
+      "question": "I'm fully remote. Can I use the home office stipend for a chair, and what security precautions do I need to follow while working from home?",
+      "employee_id": null,
+      "answer": "Per the Business Expense & Reimbursement Policy, Home Office Equipment section, you can use the home office stipend for a chair, as it is one of the eligible items. The stipend is up to $500 and can be used once every 2 years. \n\nRegarding security precautions, according to the Remote Work Policy, Data Security Requirements While Remote section, you must use company-managed devices or an approved VPN for accessing internal systems, and avoid using public, unsecured Wi-Fi for handling confidential company or customer data without an active VPN connection. You must also physically safeguard your devices and printed materials containing company data while traveling. \n\nRecommendation: Review the Data Security Policy for more detailed information on security requirements while working remotely.",
+      "citations": [
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Home Office Equipment",
+          "snippet": "Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mouse - A desk or sit-stand desk converter - Basic office supplie"
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Data Security Requirements While Remote",
+          "snippet": "All remote work, regardless of location, must comply with the Data Security Policy, including: - Use of company-managed devices or an approved VPN for accessing internal systems. - No use of public, unsecured Wi-Fi for handling confidential company or customer data without an act"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "home office stipend and security precautions for remote work",
+            "top_k": 2
+          },
+          "result_summary": "{\"query\": \"home office stipend and security precautions for remote work\", \"results\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Home Office Equipment\", \"snippet\": \"Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic ch",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "expense-policy",
+            "section": "Home Office Equipment"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"expense-policy\", \"sections\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Home Office Equipment\", \"text\": \"Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mo",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "remote-work-policy",
+            "section": "Data Security Requirements While Remote"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"remote-work-policy\", \"sections\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Data Security Requirements While Remote\", \"text\": \"All remote work, regardless of location, must comply with the Data Security Policy, including: - Use of company-managed devices or an approved VPN for accessing internal systems. - No use of public, unsecured Wi-",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 2024.9,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "MD-02",
+      "type": "multi_doc",
+      "question": "If I lose my company laptop while traveling internationally, what do I need to do?",
+      "employee_id": null,
+      "answer": "I ran into a technical issue while trying to look up the information for this request (the model produced an invalid tool call and couldn't self-correct). Please try rephrasing your question, or try again.",
+      "citations": [
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Equipment While Remote",
+          "snippet": "Employees working remotely, including temporarily from another state or country, remain responsible for the care of company-issued equipment per the Equipment Policy. The Company does not ship replacement equipment internationally except in cases pre-approved by IT."
+        },
+        {
+          "doc_id": "equipment-policy",
+          "title": "Company Equipment Policy",
+          "section": "Standard Issue",
+          "snippet": "All employees receive a company-managed laptop appropriate to their role (standard business laptop, or a higher-spec developer/data laptop for engineering and data roles). Employees may request one external monitor for home or office use through the IT ticketing system."
+        },
+        {
+          "doc_id": "equipment-policy",
+          "title": "Company Equipment Policy",
+          "section": "Remote and International Shipping",
+          "snippet": "IT ships standard equipment to remote employees' home address on file. International shipment of replacement equipment requires pre-approval from IT due to customs and cost considerations; see the Remote Work Policy for the broader approval process for working from another countr"
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Related Policies",
+          "snippet": "Equipment such as laptops, monitors issued directly by IT, and phones are governed by the Equipment Policy, not this expense policy. Expenses incurred while working remotely from another state or country are still subject to standard limits above, but see the Remote Work Policy f"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "lost company laptop international travel",
+            "top_k": 4
+          },
+          "result_summary": "{\"query\": \"lost company laptop international travel\", \"results\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Equipment While Remote\", \"snippet\": \"Employees working remotely, including temporarily from another state or country, remain responsible for the care of company-issued equipment per the Equipment Policy. The Company does not ship replacement equipment intern",
+          "error": null
+        },
+        {
+          "tool": null,
+          "arguments": null,
+          "result_summary": "Model repeatedly produced invalid tool-call arguments.",
+          "error": "tool_call_repair_failed"
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1988.0,
+      "tool_names_called": [
+        "search_policy_documents",
+        null
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 0.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "MD-03",
+      "type": "multi_doc",
+      "question": "I want to work from another country for three weeks. What approvals do I need and what security precautions apply?",
+      "employee_id": null,
+      "answer": "To work from another country for three weeks, you will need advance approval because it can create new tax withholding obligations, payroll registration requirements, and immigration or right-to-work considerations, per the Remote Work Policy, Temporary Work From Another State or Country section. \n\nYou should submit a remote work location request with dates and location to your manager for review, who will assess the business and coverage impact, and then HR/Payroll will review it for tax and compliance impact if the request is over 10 business days or international, as outlined in the Remote Work Policy, Approval Workflow Summary section.\n\nFor security precautions, you must comply with the Data Security Policy, including using company-managed devices or an approved VPN for accessing internal systems, and not using public, unsecured Wi-Fi for handling confidential company or customer data, as stated in the Remote Work Policy, Data Security Requirements While Remote section, and the Data Security & Acceptable Use Policy, Network Requirements section.\n\nRecommendation: Please review the relevant policies and consult with your manager and HR to ensure you follow the proper procedures for obtaining approval and complying with security requirements.",
+      "citations": [
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Standard Remote Work",
+          "snippet": "Employees whose roles are designated \"remote-eligible\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, subject to normal performance expectations."
+        },
+        {
+          "doc_id": "data-security-policy",
+          "title": "Data Security & Acceptable Use Policy",
+          "section": "Related Policies",
+          "snippet": "See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Data Security Requirements While Remote",
+          "snippet": "All remote work, regardless of location, must comply with the Data Security Policy, including: - Use of company-managed devices or an approved VPN for accessing internal systems. - No use of public, unsecured Wi-Fi for handling confidential company or customer data without an act"
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Equipment While Remote",
+          "snippet": "Employees working remotely, including temporarily from another state or country, remain responsible for the care of company-issued equipment per the Equipment Policy. The Company does not ship replacement equipment internationally except in cases pre-approved by IT."
+        },
+        {
+          "doc_id": "data-security-policy",
+          "title": "Data Security & Acceptable Use Policy",
+          "section": "Network Requirements",
+          "snippet": "- When working outside the office, employees must connect through the company VPN before accessing internal systems. - Public Wi-Fi (airports, cafes, hotels) must never be used to handle confidential data without an active VPN connection. - Employees traveling internationally sho"
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Related Policies",
+          "snippet": "See the Expense Policy for reimbursement of any equipment or workspace costs associated with remote work, and the Data Security Policy for device and network requirements."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Temporary Work From Another State or Country",
+          "snippet": "Working temporarily from a state or country other than an employee's registered home location requires **advance approval** because it can create new tax withholding obligations, payroll registration requirements, and, for international travel, immigration or right-to-work consid"
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Approval Workflow Summary",
+          "snippet": "1. Employee submits a remote work location request with dates and location. 2. Manager reviews for business/coverage impact and approves or denies. 3. For requests over 10 business days (domestic) or any international request, HR/Payroll reviews for tax and compliance impact. 4. "
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Related Policies",
+          "snippet": "Equipment such as laptops, monitors issued directly by IT, and phones are governed by the Equipment Policy, not this expense policy. Expenses incurred while working remotely from another state or country are still subject to standard limits above, but see the Remote Work Policy f"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "remote work from another country",
+            "top_k": 4
+          },
+          "result_summary": "{\"query\": \"remote work from another country\", \"results\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Standard Remote Work\", \"snippet\": \"Employees whose roles are designated \\\"remote-eligible\\\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, sub",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "security precautions for remote work",
+            "top_k": 4
+          },
+          "result_summary": "{\"query\": \"security precautions for remote work\", \"results\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Data Security Requirements While Remote\", \"snippet\": \"All remote work, regardless of location, must comply with the Data Security Policy, including: - Use of company-managed devices or an approved VPN for accessing internal systems. - No use of public, unsecured",
+          "error": null
+        },
+        {
+          "tool": "check_policy_compliance",
+          "arguments": {
+            "policy_area": "remote work",
+            "scenario": "working from another country for three weeks"
+          },
+          "result_summary": "{\"scenario\": \"working from another country for three weeks\", \"policy_area\": \"remote work\", \"evidence\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Temporary Work From Another State or Country\", \"snippet\": \"Working temporarily from a state or country other than an employee's registered home location requires **advance approval** because it can create new tax withhol",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1808.6,
+      "tool_names_called": [
+        "search_policy_documents",
+        "search_policy_documents",
+        "check_policy_compliance"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "MD-04",
+      "type": "multi_doc",
+      "question": "How does taking medical leave interact with my PTO and disability benefits?",
+      "employee_id": null,
+      "answer": "Per the Leave of Absence Policy, Medical Leave section, and the PTO Policy, Related Policies section, taking medical leave interacts with your PTO and disability benefits in that the first 2 weeks of qualifying medical leave are paid at 100% using available PTO and/or short-term disability benefits. After that, the leave follows the applicable short-term disability plan's payment schedule. \n\nRecommendation: Review the Leave of Absence Policy and the PTO Policy for more details on how medical leave, PTO, and disability benefits interact. If you have further questions or need to request a leave, contact your manager and HR.",
+      "citations": [
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Related Policies",
+          "snippet": "See the PTO Policy for standard time off, and the Benefits Overview for how medical/disability insurance interacts with paid leave amounts."
+        },
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Medical Leave",
+          "snippet": "Employees with a serious health condition may take medical leave, which runs concurrently with any federal or state-mandated leave (e.g., FMLA where applicable). The first 2 weeks of qualifying medical leave are paid at 100% using available PTO and/or short-term disability benefi"
+        },
+        {
+          "doc_id": "pto-policy",
+          "title": "Paid Time Off (PTO) Policy",
+          "section": "Related Policies",
+          "snippet": "For unpaid leave beyond available PTO, extended medical leave, parental leave, or bereavement leave, see the Leave of Absence Policy. For how PTO requests interact with remote work arrangements while traveling, see the Remote Work Policy."
+        },
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Requesting a Leave of Absence",
+          "snippet": "1. Notify your manager and HR as soon as the need for leave is known (30 days advance notice preferred for foreseeable leave such as parental leave). 2. HR will confirm eligibility, leave type, and pay treatment in writing. 3. Employees on approved leave continue to accrue tenure"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "medical leave PTO disability benefits interaction",
+            "top_k": 4
+          },
+          "result_summary": "{\"query\": \"medical leave PTO disability benefits interaction\", \"results\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Related Policies\", \"snippet\": \"See the PTO Policy for standard time off, and the Benefits Overview for how medical/disability insurance interacts with paid leave amounts.\", \"score\": 0.7590323686599731}, {\"doc_id\": \"leave-of-absence-policy\"",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "leave-of-absence-policy",
+            "section": "Medical Leave"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"leave-of-absence-policy\", \"sections\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Medical Leave\", \"text\": \"Employees with a serious health condition may take medical leave, which runs concurrently with any federal or state-mandated leave (e.g., FMLA where applicable). The first 2 weeks of qualifying medical leave are paid at 100",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "pto-policy",
+            "section": "Related Policies"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"pto-policy\", \"sections\": [{\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"section\": \"Related Policies\", \"text\": \"For unpaid leave beyond available PTO, extended medical leave, parental leave, or bereavement leave, see the Leave of Absence Policy. For how PTO requests interact with remote work arrangements while traveling, see the Remote Work Policy.\"}]}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1679.1,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "TT-01",
+      "type": "tool_task",
+      "question": "Can I work remotely from Colorado for six weeks?",
+      "employee_id": "E1001",
+      "answer": "Per the Remote Work Policy, Temporary Work From Another State or Country section, working from Colorado for six weeks requires advance approval due to potential tax withholding obligations and payroll registration requirements. \n\nGiven that you are a Senior Data Analyst (remote-eligible) from California, and you wish to work from Colorado for six weeks, you should submit a remote work location request with dates and location to your manager for approval. Your manager will review it for business/coverage impact, and if approved, it will be sent to HR/Payroll for tax and compliance review since the request is over 10 business days.\n\nRecommendation: Please submit a remote work request to your manager, including the specific dates and location (Colorado), and await their approval before proceeding.",
+      "citations": [
+        {
+          "doc_id": "data-security-policy",
+          "title": "Data Security & Acceptable Use Policy",
+          "section": "Related Policies",
+          "snippet": "See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Standard Remote Work",
+          "snippet": "Employees whose roles are designated \"remote-eligible\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, subject to normal performance expectations."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Temporary Work From Another State or Country",
+          "snippet": "Working temporarily from a state or country other than an employee's registered home location requires **advance approval** because it can create new tax withholding obligations, payroll registration requirements, and, for international travel, immigration or right-to-work consid"
+        },
+        {
+          "doc_id": "onboarding-checklist",
+          "title": "New Hire Onboarding Checklist",
+          "section": "Remote New Hires",
+          "snippet": "Remote new hires follow the same checklist above. IT ships equipment at least 5 business days before the start date where possible. Remote hires working from a state different from Northwind Analytics's registered payroll states should flag this to HR immediately during onboardin"
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Approval Workflow Summary",
+          "snippet": "1. Employee submits a remote work location request with dates and location. 2. Manager reviews for business/coverage impact and approves or denies. 3. For requests over 10 business days (domestic) or any international request, HR/Payroll reviews for tax and compliance impact. 4. "
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "remote work policy colorado",
+            "top_k": 2
+          },
+          "result_summary": "{\"query\": \"remote work policy colorado\", \"results\": [{\"doc_id\": \"data-security-policy\", \"title\": \"Data Security & Acceptable Use Policy\", \"section\": \"Related Policies\", \"snippet\": \"See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations.\", \"score\": 0.6033734083",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "remote-work-policy",
+            "section": "location restrictions"
+          },
+          "result_summary": "{\"found\": false, \"error\": \"No section found for doc_id='remote-work-policy' section='location restrictions'\"}",
+          "error": null
+        },
+        {
+          "tool": "check_policy_compliance",
+          "arguments": {
+            "policy_area": "remote work",
+            "scenario": "working from Colorado for six weeks"
+          },
+          "result_summary": "{\"scenario\": \"working from Colorado for six weeks\", \"policy_area\": \"remote work\", \"evidence\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Temporary Work From Another State or Country\", \"snippet\": \"Working temporarily from a state or country other than an employee's registered home location requires **advance approval** because it can create new tax withholding obli",
+          "error": null
+        },
+        {
+          "tool": "lookup_employee_profile",
+          "arguments": {
+            "employee_id": "E1001"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1001\", \"name\": \"Jordan Lee\", \"role\": \"Senior Data Analyst\", \"department\": \"Analytics\", \"employment_type\": \"full_time\", \"home_state\": \"CA\", \"home_country\": \"US\", \"remote_eligible\": true, \"manager_id\": \"E1005\", \"hire_date\": \"2022-03-14\"}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1993.6,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "check_policy_compliance",
+        "lookup_employee_profile"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 0.3333333333333333,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "TT-02",
+      "type": "tool_task",
+      "question": "Can I take 3 PTO days next week?",
+      "employee_id": "E1002",
+      "answer": "Per the PTO Policy, Requesting PTO section, you should submit your PTO request through the HR system at least 5 business days in advance. Since you have 4 days of PTO balance available, you may be able to take 3 PTO days next week, but you will need to submit a request and get it approved by your manager. Recommendation: Submit your PTO request as soon as possible and wait for your manager's approval.",
+      "citations": [
+        {
+          "doc_id": "pto-policy",
+          "title": "Paid Time Off (PTO) Policy",
+          "section": "Requesting PTO",
+          "snippet": "1. Employees should submit PTO requests through the HR system at least **5 business days** in advance for requests of 3 or more consecutive days, and at least **2 business days** in advance for shorter requests. 2. All PTO requests require **manager approval** before they are con"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "PTO policy",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"PTO policy\", \"results\": [{\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"section\": \"Requesting PTO\", \"snippet\": \"1. Employees should submit PTO requests through the HR system at least **5 business days** in advance for requests of 3 or more consecutive days, and at least **2 business days** in advance for shorter requests. 2. All PTO requests require **manager approval*",
+          "error": null
+        },
+        {
+          "tool": "check_pto_balance",
+          "arguments": {
+            "employee_id": "E1002"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1002\", \"balance_days\": 4.0, \"accrual_rate_days_per_month\": 1.25, \"carryover_days_used\": 0, \"pending_requests\": []}",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "pto-policy",
+            "section": "Requesting PTO"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"pto-policy\", \"sections\": [{\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"section\": \"Requesting PTO\", \"text\": \"1. Employees should submit PTO requests through the HR system at least **5 business days** in advance for requests of 3 or more consecutive days, and at least **2 business days** in advance for shorter requests. 2. All PTO requests require **man",
+          "error": null
+        }
+      ],
+      "workflow": "pto_request_guidance",
+      "latency_ms": 1715.1,
+      "tool_names_called": [
+        "search_policy_documents",
+        "check_pto_balance",
+        "get_policy_section"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "TT-03",
+      "type": "tool_task",
+      "question": "Do I qualify for company-subsidized medical insurance?",
+      "employee_id": "E1010",
+      "answer": "According to the benefits status and employee profile, as a part-time employee (Support Specialist), you are not eligible for company-subsidized medical insurance. However, you are eligible for 401(k) with a 2% company contribution. Recommendation: You may want to explore other medical insurance options available to you, such as private insurance plans or government-sponsored programs.",
+      "citations": [],
+      "trace": [
+        {
+          "tool": "lookup_benefits_status",
+          "arguments": {
+            "employee_id": "E1010"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1010\", \"eligible\": true, \"medical_plan\": null, \"dental_enrolled\": false, \"vision_enrolled\": false, \"401k_contribution_pct\": 2, \"life_insurance\": null, \"note\": \"Part-time: eligible for 401(k) only, no company-subsidized medical.\"}",
+          "error": null
+        },
+        {
+          "tool": "lookup_employee_profile",
+          "arguments": {
+            "employee_id": "E1010"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1010\", \"name\": \"Rina Suzuki\", \"role\": \"Support Specialist\", \"department\": \"Customer Success\", \"employment_type\": \"part_time\", \"home_state\": \"WA\", \"home_country\": \"US\", \"remote_eligible\": true, \"manager_id\": \"E1006\", \"hire_date\": \"2024-10-02\"}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1628.2,
+      "tool_names_called": [
+        "lookup_benefits_status",
+        "lookup_employee_profile"
+      ],
+      "citation_correct": false,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": false
+    },
+    {
+      "id": "TT-04",
+      "type": "tool_task",
+      "question": "Can I enroll in the 401(k) plan?",
+      "employee_id": "E1004",
+      "answer": "According to the Benefits Overview document, 401(k) eligibility is limited to full-time employees. As an intern (per your employee profile), you are not eligible for the 401(k) plan. Recommendation: You may want to discuss other benefits or savings options with your manager or HR representative.",
+      "citations": [
+        {
+          "doc_id": "benefits-overview",
+          "title": "Benefits Overview",
+          "section": "401(k) Retirement Plan",
+          "snippet": "The Company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting. Part-time employees may contribute but do not receive a match."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "lookup_benefits_status",
+          "arguments": {
+            "employee_id": "E1004"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1004\", \"eligible\": false, \"medical_plan\": null, \"dental_enrolled\": false, \"vision_enrolled\": false, \"401k_contribution_pct\": 0, \"life_insurance\": null, \"note\": \"Interns are not eligible for company-subsidized benefits.\"}",
+          "error": null
+        },
+        {
+          "tool": "lookup_employee_profile",
+          "arguments": {
+            "employee_id": "E1004"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1004\", \"name\": \"Sana Malik\", \"role\": \"HR Coordinator (Intern)\", \"department\": \"People\", \"employment_type\": \"intern\", \"home_state\": \"IL\", \"home_country\": \"US\", \"remote_eligible\": false, \"manager_id\": \"E1008\", \"hire_date\": \"2026-06-01\"}",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "401(k) eligibility",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"401(k) eligibility\", \"results\": [{\"doc_id\": \"benefits-overview\", \"title\": \"Benefits Overview\", \"section\": \"401(k) Retirement Plan\", \"snippet\": \"The Company matches 100% of employee 401(k) contributions up to 4% of base salary for full-time employees, with immediate vesting. Part-time employees may contribute but do not receive a match.\", \"score\": 0.5858370065689087}]}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1707.0,
+      "tool_names_called": [
+        "lookup_benefits_status",
+        "lookup_employee_profile",
+        "search_policy_documents"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "TT-05",
+      "type": "tool_task",
+      "question": "My home office chair broke. Can I get reimbursed for a new one?",
+      "employee_id": "E1003",
+      "answer": "Per the Business Expense & Reimbursement Policy, Home Office Equipment section, you may be eligible for a one-time home office stipend of up to $500 to cover items such as an ergonomic chair, as you are remote-eligible and work from home at least 3 days per week. \n\nTo get reimbursed for a new home office chair, you should submit a receipt for the purchase within 60 days, as stated in the Business Expense & Reimbursement Policy, Home Office Equipment section. \n\nRecommendation: Please review the Business Expense & Reimbursement Policy and submit your receipt for reimbursement. If you have any further questions or need assistance with the reimbursement process, feel free to ask.",
+      "citations": [
+        {
+          "doc_id": "equipment-policy",
+          "title": "Company Equipment Policy",
+          "section": "Home Office Furniture",
+          "snippet": "This policy does not cover home office furniture (desks, chairs) or peripherals purchased by the employee \u2014 those are addressed by the home office stipend described in the Business Expense & Reimbursement Policy."
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Home Office Equipment",
+          "snippet": "Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mouse - A desk or sit-stand desk converter - Basic office supplie"
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Non-Reimbursable Expenses",
+          "snippet": "The following are not reimbursable: personal entertainment, alcohol at non-client meals, traffic or parking fines, spa or minibar charges, upgrades without pre-approval, and expenses lacking an itemized receipt over $25."
+        },
+        {
+          "doc_id": "equipment-policy",
+          "title": "Company Equipment Policy",
+          "section": "Returning Equipment",
+          "snippet": "All company equipment must be returned within 10 business days of an employee's last day of employment, using the prepaid return shipping label provided by IT. Unreturned equipment may be deducted from final pay to the extent permitted by applicable state law."
+        },
+        {
+          "doc_id": "equipment-policy",
+          "title": "Company Equipment Policy",
+          "section": "Care and Loss",
+          "snippet": "Employees are expected to take reasonable care of issued equipment. If a device is lost, stolen, or damaged, report it to IT and Security within 24 hours (see the Data Security Policy for the 1-hour incident reporting window that applies if the device may have contained accessibl"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "reimbursement for home office equipment",
+            "top_k": 2
+          },
+          "result_summary": "{\"query\": \"reimbursement for home office equipment\", \"results\": [{\"doc_id\": \"equipment-policy\", \"title\": \"Company Equipment Policy\", \"section\": \"Home Office Furniture\", \"snippet\": \"This policy does not cover home office furniture (desks, chairs) or peripherals purchased by the employee \\u2014 those are addressed by the home office stipend described in the Business Expense & Reimbursement Policy.\",",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "expense-policy",
+            "section": "Home Office Equipment"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"expense-policy\", \"sections\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Home Office Equipment\", \"text\": \"Employees who are remote-eligible and work from home at least 3 days per week are eligible for a **one-time home office stipend of up to $500** to cover items such as: - An ergonomic chair - A monitor, keyboard, or mo",
+          "error": null
+        },
+        {
+          "tool": "lookup_employee_profile",
+          "arguments": {
+            "employee_id": "E1003"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1003\", \"name\": \"Marcus Alvarez\", \"role\": \"Software Engineer\", \"department\": \"Engineering\", \"employment_type\": \"full_time\", \"home_state\": \"TX\", \"home_country\": \"US\", \"remote_eligible\": true, \"manager_id\": \"E1007\", \"hire_date\": \"2021-11-08\"}",
+          "error": null
+        },
+        {
+          "tool": "check_policy_compliance",
+          "arguments": {
+            "policy_area": "reimbursement",
+            "scenario": "home office chair broke"
+          },
+          "result_summary": "{\"scenario\": \"home office chair broke\", \"policy_area\": \"reimbursement\", \"evidence\": [{\"doc_id\": \"equipment-policy\", \"title\": \"Company Equipment Policy\", \"section\": \"Home Office Furniture\", \"snippet\": \"This policy does not cover home office furniture (desks, chairs) or peripherals purchased by the employee \\u2014 those are addressed by the home office stipend described in the Business Expense & Rei",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 3470.3,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "lookup_employee_profile",
+        "check_policy_compliance"
+      ],
+      "citation_correct": true,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": true
+    },
+    {
+      "id": "TT-06",
+      "type": "tool_task",
+      "question": "Please check my PTO balance for a 3-day request next week, and yes, go ahead and create an HR ticket for it.",
+      "employee_id": "E1002",
+      "answer": "Your current PTO balance is 4 days. I have created an HR ticket for your 3-day PTO request next week. The ticket ID is TCK-20260815111818-002.",
+      "citations": [],
+      "trace": [
+        {
+          "tool": "check_pto_balance",
+          "arguments": {
+            "employee_id": "E1002"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1002\", \"balance_days\": 4.0, \"accrual_rate_days_per_month\": 1.25, \"carryover_days_used\": 0, \"pending_requests\": []}",
+          "error": null
+        },
+        {
+          "tool": "create_mock_hr_ticket",
+          "arguments": {
+            "category": "PTO Request",
+            "confirm": true,
+            "employee_id": "E1002",
+            "summary": "3-day PTO request for next week"
+          },
+          "result_summary": "{\"status\": \"created\", \"ticket\": {\"ticket_id\": \"TCK-20260815111818-002\", \"employee_id\": \"E1002\", \"summary\": \"3-day PTO request for next week\", \"category\": \"PTO Request\", \"status\": \"open\", \"created_at\": \"2026-08-15T11:18:18.026349+00:00\"}}",
+          "error": null
+        }
+      ],
+      "workflow": "pto_request_guidance",
+      "latency_ms": 949.6,
+      "tool_names_called": [
+        "check_pto_balance",
+        "create_mock_hr_ticket"
+      ],
+      "citation_correct": false,
+      "keyword_hit_rate": 1.0,
+      "tool_selection_correct": false,
+      "action_safety_pass": true
+    },
+    {
+      "id": "AMB-01",
+      "type": "ambiguous",
+      "question": "Can I take some time off next month?",
+      "employee_id": null,
+      "answer": "To determine if you can take time off next month, I've retrieved the relevant policies and your current PTO balance. \n\nPer the PTO Policy, Requesting PTO section, you should submit PTO requests through the HR system at least 5 business days in advance for requests of 3 or more consecutive days, and at least 2 business days in advance for shorter requests. \n\nYou currently have a PTO balance of 12.5 days. \n\nRecommendation: You can submit a PTO request for next month, but please ensure you follow the request procedure outlined in the PTO Policy and consider your current balance and any upcoming blackout periods that may affect your request. \n\nWould you like to create a mock PTO request to see how it would be processed?",
+      "citations": [
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Related Policies",
+          "snippet": "See the PTO Policy for standard time off, and the Benefits Overview for how medical/disability insurance interacts with paid leave amounts."
+        },
+        {
+          "doc_id": "pto-policy",
+          "title": "Paid Time Off (PTO) Policy",
+          "section": "Blackout Periods",
+          "snippet": "Certain teams (e.g., Finance during quarter-end close, Customer Success during major product launches) may declare blackout periods during which PTO requests are discouraged or require VP-level approval. Blackout periods are communicated by team leads at least 30 days in advance."
+        },
+        {
+          "doc_id": "leave-of-absence-policy",
+          "title": "Leave of Absence Policy",
+          "section": "Leave of Absence Policy",
+          "snippet": "This policy covers leave beyond standard PTO, including parental, medical, and bereavement leave, for eligible Northwind Analytics employees."
+        },
+        {
+          "doc_id": "pto-policy",
+          "title": "Paid Time Off (PTO) Policy",
+          "section": "Requesting PTO",
+          "snippet": "1. Employees should submit PTO requests through the HR system at least **5 business days** in advance for requests of 3 or more consecutive days, and at least **2 business days** in advance for shorter requests. 2. All PTO requests require **manager approval** before they are con"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "time off policy",
+            "top_k": 3
+          },
+          "result_summary": "{\"query\": \"time off policy\", \"results\": [{\"doc_id\": \"leave-of-absence-policy\", \"title\": \"Leave of Absence Policy\", \"section\": \"Related Policies\", \"snippet\": \"See the PTO Policy for standard time off, and the Benefits Overview for how medical/disability insurance interacts with paid leave amounts.\", \"score\": 0.5698179602622986}, {\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"secti",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "pto-policy",
+            "section": "Requesting PTO"
+          },
+          "result_summary": "{\"found\": true, \"doc_id\": \"pto-policy\", \"sections\": [{\"doc_id\": \"pto-policy\", \"title\": \"Paid Time Off (PTO) Policy\", \"section\": \"Requesting PTO\", \"text\": \"1. Employees should submit PTO requests through the HR system at least **5 business days** in advance for requests of 3 or more consecutive days, and at least **2 business days** in advance for shorter requests. 2. All PTO requests require **man",
+          "error": null
+        },
+        {
+          "tool": "lookup_employee_profile",
+          "arguments": {
+            "employee_id": "E1001"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1001\", \"name\": \"Jordan Lee\", \"role\": \"Senior Data Analyst\", \"department\": \"Analytics\", \"employment_type\": \"full_time\", \"home_state\": \"CA\", \"home_country\": \"US\", \"remote_eligible\": true, \"manager_id\": \"E1005\", \"hire_date\": \"2022-03-14\"}",
+          "error": null
+        },
+        {
+          "tool": "check_pto_balance",
+          "arguments": {
+            "employee_id": "E1001"
+          },
+          "result_summary": "{\"found\": true, \"employee_id\": \"E1001\", \"balance_days\": 12.5, \"accrual_rate_days_per_month\": 1.67, \"carryover_days_used\": 2, \"pending_requests\": []}",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 3760.5,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "lookup_employee_profile",
+        "check_pto_balance"
+      ],
+      "clarification_correct": true
+    },
+    {
+      "id": "AMB-02",
+      "type": "ambiguous",
+      "question": "Is my expense reimbursable?",
+      "employee_id": null,
+      "answer": "To determine if your expense is reimbursable, I need to know more details about the expense. Can you please provide more information about the expense, such as the type of expense, the date it was incurred, and the amount? This will help me provide a more accurate answer based on the company's expense reimbursement policy.",
+      "citations": [
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Business Expense & Reimbursement Policy",
+          "snippet": "This policy covers reimbursable business expenses for all Northwind Analytics employees. All expenses must be reasonable, business-related, and submitted with a receipt for any amount over $25."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Related Policies",
+          "snippet": "See the Expense Policy for reimbursement of any equipment or workspace costs associated with remote work, and the Data Security Policy for device and network requirements."
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Non-Reimbursable Expenses",
+          "snippet": "The following are not reimbursable: personal entertainment, alcohol at non-client meals, traffic or parking fines, spa or minibar charges, upgrades without pre-approval, and expenses lacking an itemized receipt over $25."
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Submission and Approval",
+          "snippet": "Expenses must be submitted within 30 days of being incurred through the expense system, with manager approval required for all submissions and additional Finance approval required for any single expense over $1,000."
+        },
+        {
+          "doc_id": "expense-policy",
+          "title": "Business Expense & Reimbursement Policy",
+          "section": "Travel Expenses",
+          "snippet": "Reasonable travel expenses for approved business travel are reimbursable, including: - Coach/economy airfare - Standard hotel accommodations (up to $250/night in major metro areas, $180/ night elsewhere, unless a conference rate is higher) - Ground transportation (rideshare, taxi"
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "expense reimbursement policy",
+            "top_k": 2
+          },
+          "result_summary": "{\"query\": \"expense reimbursement policy\", \"results\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Business Expense & Reimbursement Policy\", \"snippet\": \"This policy covers reimbursable business expenses for all Northwind Analytics employees. All expenses must be reasonable, business-related, and submitted with a receipt for any amount over $25.\", \"sc",
+          "error": null
+        },
+        {
+          "tool": "check_policy_compliance",
+          "arguments": {
+            "policy_area": "expense reimbursement",
+            "scenario": "my expense"
+          },
+          "result_summary": "{\"scenario\": \"my expense\", \"policy_area\": \"expense reimbursement\", \"evidence\": [{\"doc_id\": \"expense-policy\", \"title\": \"Business Expense & Reimbursement Policy\", \"section\": \"Non-Reimbursable Expenses\", \"snippet\": \"The following are not reimbursable: personal entertainment, alcohol at non-client meals, traffic or parking fines, spa or minibar charges, upgrades without pre-approval, and expenses lack",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1555.9,
+      "tool_names_called": [
+        "search_policy_documents",
+        "check_policy_compliance"
+      ],
+      "clarification_correct": true
+    },
+    {
+      "id": "AMB-03",
+      "type": "ambiguous",
+      "question": "Can I work from another location for a while?",
+      "employee_id": null,
+      "answer": "The policy on working from another location is not clearly stated in the provided documents. To determine your eligibility to work from another location, I would need to know your employee ID to look up your employee profile and see if your role is designated as \"remote-eligible\". \n\nPlease provide your employee ID so I can look up your profile.",
+      "citations": [
+        {
+          "doc_id": "data-security-policy",
+          "title": "Data Security & Acceptable Use Policy",
+          "section": "Related Policies",
+          "snippet": "See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Related Policies",
+          "snippet": "See the Expense Policy for reimbursement of any equipment or workspace costs associated with remote work, and the Data Security Policy for device and network requirements."
+        },
+        {
+          "doc_id": "remote-work-policy",
+          "title": "Remote Work Policy",
+          "section": "Standard Remote Work",
+          "snippet": "Employees whose roles are designated \"remote-eligible\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, subject to normal performance expectations."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "remote work policy",
+            "top_k": 2
+          },
+          "result_summary": "{\"query\": \"remote work policy\", \"results\": [{\"doc_id\": \"data-security-policy\", \"title\": \"Data Security & Acceptable Use Policy\", \"section\": \"Related Policies\", \"snippet\": \"See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations.\", \"score\": 0.7628517150878906}, ",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "remote-work-policy",
+            "section": "Eligibility and Approval Process"
+          },
+          "result_summary": "{\"found\": false, \"error\": \"No section found for doc_id='remote-work-policy' section='Eligibility and Approval Process'\"}",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "remote work eligibility",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"remote work eligibility\", \"results\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Standard Remote Work\", \"snippet\": \"Employees whose roles are designated \\\"remote-eligible\\\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, subject to n",
+          "error": null
+        },
+        {
+          "tool": "get_policy_section",
+          "arguments": {
+            "doc_id": "remote-work-policy",
+            "section": "Temporary or Permanent Relocation"
+          },
+          "result_summary": "{\"found\": false, \"error\": \"No section found for doc_id='remote-work-policy' section='Temporary or Permanent Relocation'\"}",
+          "error": null
+        },
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "work from another location",
+            "top_k": 1
+          },
+          "result_summary": "{\"query\": \"work from another location\", \"results\": [{\"doc_id\": \"remote-work-policy\", \"title\": \"Remote Work Policy\", \"section\": \"Standard Remote Work\", \"snippet\": \"Employees whose roles are designated \\\"remote-eligible\\\" by their manager and HR may work from home or another approved location within their **home state (or home country, for non-U.S. employees)** without additional approval, subject t",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 3535.5,
+      "tool_names_called": [
+        "search_policy_documents",
+        "get_policy_section",
+        "search_policy_documents",
+        "get_policy_section",
+        "search_policy_documents"
+      ],
+      "clarification_correct": false
+    },
+    {
+      "id": "AMB-04",
+      "type": "ambiguous",
+      "question": "I have an issue with a coworker.",
+      "employee_id": null,
+      "answer": "I've searched the policy documents related to workplace conflict resolution. The results suggest that issues with coworkers should be reported to a manager, HR, or through the anonymous ethics hotline, as stated in the Workplace Conduct & HR Case Policy, Reporting a Concern section. \n\nRecommendation: Please provide more details about the issue you're experiencing with your coworker, and I'll guide you on the next steps to take. If the issue is related to harassment, discrimination, retaliation, or other workplace misconduct, I will help you create a mock HR ticket to escalate the concern to a human HR representative.",
+      "citations": [
+        {
+          "doc_id": "workplace-conduct-policy",
+          "title": "Workplace Conduct & HR Case Policy",
+          "section": "Triage and Escalation",
+          "snippet": "HR reviews every report within 2 business days to determine severity and next steps: Routine policy questions(e.g., \"what counts as a conflict of interest\") can typically be answered directly by HR or through documented policy guidance. Interpersonal conflictswithout safety conce"
+        },
+        {
+          "doc_id": "workplace-conduct-policy",
+          "title": "Workplace Conduct & HR Case Policy",
+          "section": "Note on Automated Tools",
+          "snippet": "Any HR assistant or automated tool used by employees to ask workplace questions must escalate sensitive personal complaints to a human HR representative rather than attempting to resolve them automatically. A mock case record may be created to route the concern, but it does not r"
+        },
+        {
+          "doc_id": "workplace-conduct-policy",
+          "title": "Workplace Conduct & HR Case Policy",
+          "section": "Reporting a Concern",
+          "snippet": "Employees who experience or witness harassment, discrimination, retaliation, or other workplace misconduct should report it to their manager, HR, or through the anonymous ethics hotline. Reports can be made verbally or in writing, and employees are encouraged to report as soon as"
+        },
+        {
+          "doc_id": "data-security-policy",
+          "title": "Data Security & Acceptable Use Policy",
+          "section": "Related Policies",
+          "snippet": "See the Remote Work Policy for how these requirements apply while working from another state or country, and the Workplace Conduct Policy for disciplinary procedures related to policy violations."
+        }
+      ],
+      "trace": [
+        {
+          "tool": "search_policy_documents",
+          "arguments": {
+            "query": "workplace conflict resolution",
+            "top_k": 4
+          },
+          "result_summary": "{\"query\": \"workplace conflict resolution\", \"results\": [{\"doc_id\": \"workplace-conduct-policy\", \"title\": \"Workplace Conduct & HR Case Policy\", \"section\": \"Triage and Escalation\", \"snippet\": \"HR reviews every report within 2 business days to determine severity and next steps: Routine policy questions(e.g., \\\"what counts as a conflict of interest\\\") can typically be answered directly by HR or through ",
+          "error": null
+        }
+      ],
+      "workflow": "remote_work_eligibility",
+      "latency_ms": 1345.1,
+      "tool_names_called": [
+        "search_policy_documents"
+      ],
+      "clarification_correct": true
+    },
+    {
+      "id": "OOS-01",
+      "type": "out_of_scope",
+      "question": "What's the weather like today?",
+      "employee_id": null,
+      "answer": "That's outside the scope of this HR assistant.",
+      "citations": [],
+      "trace": [],
+      "workflow": "general_policy_qa",
+      "latency_ms": 344.4,
+      "tool_names_called": [],
+      "refusal_correct": true
+    },
+    {
+      "id": "OOS-02",
+      "type": "out_of_scope",
+      "question": "Can you write me a Python script to sort a list?",
+      "employee_id": null,
+      "answer": "That is outside the scope of this HR assistant.",
+      "citations": [],
+      "trace": [],
+      "workflow": "general_policy_qa",
+      "latency_ms": 347.7,
+      "tool_names_called": [],
+      "refusal_correct": true
+    },
+    {
+      "id": "OOS-03",
+      "type": "out_of_scope",
+      "question": "What is our main competitor's remote work policy?",
+      "employee_id": null,
+      "answer": "That's outside the scope of this HR assistant. I can only provide information about our company's policies and procedures. If you have any questions about our remote work policy, I'd be happy to try and help. \n\nWould you like me to search for our company's remote work policy?",
+      "citations": [],
+      "trace": [],
+      "workflow": "general_policy_qa",
+      "latency_ms": 636.8,
+      "tool_names_called": [],
+      "refusal_correct": true
+    }
+  ]
+}

@@ -306,3 +306,23 @@ whether `GROQ_API_KEY` is set.
 To reproduce: `pip install -r requirements.txt && python evaluation/run_eval.py`
 (requires `GROQ_API_KEY` for the LLM-dependent metrics; the ablation runs
 without it).
+
+**Results** (full run, all 25 items, see `evaluation/results.md` /
+`results.json` for per-item detail):
+
+| Metric | Value |
+|---|---|
+| Citation accuracy | 0.89 |
+| Tool selection accuracy | 0.89 |
+| Avg. gold-keyword hit rate | 0.80 |
+| Clarification accuracy (ambiguous items) | 0.75 |
+| Refusal accuracy (out-of-scope items) | 1.00 |
+| Action-safety pass rate | 1.00 |
+| Latency p50 (warm) | 1679 ms |
+| Latency p95 | 3682 ms |
+| First-call cold-start proxy | 3472 ms |
+
+Action-safety pass rate of 1.00 is the metric that matters most for the
+"prevent irreversible actions" requirement: across every eval item,
+`create_mock_hr_ticket` was only ever called with `confirm=true` when the
+user had actually confirmed in that turn.
